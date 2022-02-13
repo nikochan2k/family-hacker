@@ -2,8 +2,10 @@ import { getDocumentAsync } from "expo-document-picker";
 import { Text } from "native-base";
 import React, { Fragment, useCallback, useEffect, useState, VFC } from "react";
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import { useRecoilCallback } from "recoil";
 import { Emulator } from "../components/Emulator";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../components/ScreenCommon";
+import { snapshotsAtom } from "../stores/snapshots";
 
 const MAX_BYTES = (4 * 1024 * 1024) / 8;
 
@@ -30,21 +32,26 @@ export const PlayView: VFC = () => {
     setScreen({ width, height });
   }, []);
 
-  const openRom = useCallback(async () => {
-    const res = await getDocumentAsync({
-      multiple: false,
-    });
-    if (res.type === "cancel" || !res.file) return;
-    const file = res.file;
-    if (MAX_BYTES < file.size) return;
-    const reader = new FileReader();
-    const romData = await new Promise<string>((resolve, reject) => {
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (ev) => reject(reader.error || ev);
-      reader.readAsBinaryString(file);
-    });
-    setCartridge({ romData, name: file.name, ticks: Date.now() });
-  }, []);
+  const openRom = useRecoilCallback(
+    ({ set }) =>
+      async () => {
+        const res = await getDocumentAsync({
+          multiple: false,
+        });
+        if (res.type === "cancel" || !res.file) return;
+        const file = res.file;
+        if (MAX_BYTES < file.size) return;
+        const reader = new FileReader();
+        const romData = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = (ev) => reject(reader.error || ev);
+          reader.readAsBinaryString(file);
+        });
+        setCartridge({ romData, name: file.name, ticks: Date.now() });
+        set(snapshotsAtom, []);
+      },
+    []
+  );
 
   if (!screen) {
     return <Fragment />;

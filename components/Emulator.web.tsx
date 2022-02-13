@@ -6,11 +6,13 @@ import FrameTimer from "../features/FrameTimer";
 import KeyboardController from "../features/KeyboardController";
 import { Screen } from "./Screen";
 
+export let mem: number[] | undefined;
 export class Emulator extends PureComponent<EmulatorProps> {
+  public nes?: NES;
+
   private fpsInterval?: number;
   private frameTimer?: FrameTimer;
   private keyboardController?: KeyboardController;
-  private nes?: NES;
   private screen?: Screen;
   private started = false;
 
@@ -76,6 +78,7 @@ export class Emulator extends PureComponent<EmulatorProps> {
   public start = () => {
     if (!this.frameTimer || this.started) return;
     this.started = true;
+    mem = this.nes.cpu.mem;
     this.frameTimer.start();
     this.fpsInterval = window.setInterval(() => {
       console.log(`FPS: ${this.nes.getFPS()}`);
@@ -85,6 +88,7 @@ export class Emulator extends PureComponent<EmulatorProps> {
   public stop = () => {
     if (!this.frameTimer || !this.started) return;
     this.started = false;
+    mem = undefined;
     this.frameTimer.stop();
     window.clearInterval(this.fpsInterval);
   };
