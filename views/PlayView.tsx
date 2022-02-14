@@ -1,10 +1,11 @@
 import { getDocumentAsync } from "expo-document-picker";
 import { Text } from "native-base";
-import React, { Fragment, useCallback, useEffect, useState, VFC } from "react";
+import React, { Fragment, useEffect, useState, VFC } from "react";
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
-import { useRecoilCallback } from "recoil";
+import { useRecoilCallback, useSetRecoilState } from "recoil";
 import { Emulator } from "../components/Emulator";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../components/ScreenCommon";
+import { nesKeyAtom } from "../stores/nes";
 import { snapshotsAtom } from "../stores/snapshots";
 
 const MAX_BYTES = (4 * 1024 * 1024) / 8;
@@ -18,6 +19,7 @@ interface Cartridge {
 export const PlayView: VFC = () => {
   const [cartridge, setCartridge] = useState<Cartridge>();
   const [screen, setScreen] = useState<{ width: number; height: number }>();
+  const setNesKey = useSetRecoilState(nesKeyAtom);
 
   useEffect(() => {
     const { width: w, height: h } = Dimensions.get("window");
@@ -72,7 +74,11 @@ export const PlayView: VFC = () => {
       onPress={openRom}
     >
       {cartridge ? (
-        <Emulator key={cartridge.ticks} romData={cartridge.romData} />
+        <Emulator
+          key={cartridge.ticks}
+          romData={cartridge.romData}
+          ref={(ref) => setNesKey(ref?.key || "")}
+        />
       ) : (
         <Text fontSize="lg" style={styles.text}>
           Press to open rom...

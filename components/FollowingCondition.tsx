@@ -1,30 +1,55 @@
 import { Button, HStack, Input, Select } from "native-base";
-import React, { Fragment, useState, VFC } from "react";
+import React, { Fragment, useCallback, useState, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilCallback } from "recoil";
 import { Condition, ExprType } from "../model";
+import { nesKeyAtom } from "../stores/nes";
 import { addSnapshot, snapshotsAtom } from "../stores/snapshots";
-import { mem } from "./Emulator";
+import { nesMap } from "./EmulatorCommon";
 
 export const FollowingCondition: VFC = () => {
-  const [cond, setCond] = useState<Condition>({ expr: "≠?", value: 0 });
+  const [condition, setCondition] = useState<Condition>({
+    expr: "≠?",
+    value: 0,
+  });
 
   const addCondition = useRecoilCallback(
     ({ snapshot, set }) =>
       async () => {
-        if (!Array.isArray(mem)) return;
+        const nesKey = await snapshot.getPromise(nesKeyAtom);
+        const nes = nesMap[nesKey];
         const snapshots = await snapshot.getPromise(snapshotsAtom);
-        const newSnapshots = addSnapshot(cond, snapshots, mem);
+        const newSnapshots = addSnapshot(condition, snapshots, nes.cpu.mem);
         set(snapshotsAtom, newSnapshots);
       },
-    [cond]
+    [condition]
   );
 
+  const setText = useCallback((text) => {
+    if (!text) {
+      setCondition({ ...condition, value: 0 });
+      return;
+    }
+    let value = Math.trunc(text as any);
+    if (isNaN(value)) {
+      return;
+    }
+    if (value < 0) {
+      value = 0;
+    }
+    if (256 <= value) {
+      value = 255;
+    }
+    setCondition({ ...condition, value });
+  }, []);
+
   return (
-    <HStack>
+    <HStack style={styles.container}>
       <Select
-        selectedValue={cond.expr}
-        onValueChange={(value) => setCond({ ...cond, expr: value as ExprType })}
+        selectedValue={condition.expr}
+        onValueChange={(value) =>
+          setCondition({ ...condition, expr: value as ExprType })
+        }
       >
         <Select.Item label="= (equal)" value="=" />
         <Select.Item label="≠ (not equal)" value="≠" />
@@ -38,27 +63,11 @@ export const FollowingCondition: VFC = () => {
         <Select.Item label=">? (greater than last value)" value=">?" />
         <Select.Item label="<? (less than last value)" value="<?" />
       </Select>
-      {0 <= ["≠?", ">?", "<?"].indexOf(cond.expr) ? (
+      {0 <= ["≠?", ">?", "<?"].indexOf(condition.expr) ? (
         <Input
           style={styles.input}
-          value={cond.value + ""}
-          onChangeText={(text) => {
-            if (!text) {
-              setCond({ ...cond, value: 0 });
-              return;
-            }
-            let value = Math.trunc(text as any);
-            if (isNaN(value)) {
-              return;
-            }
-            if (value < 0) {
-              value = 0;
-            }
-            if (256 <= value) {
-              value = 255;
-            }
-            setCond({ ...cond, value });
-          }}
+          value={condition.value + ""}
+          onChangeText={setText}
         />
       ) : (
         <Fragment />
@@ -69,6 +78,7 @@ export const FollowingCondition: VFC = () => {
 };
 
 const styles = StyleSheet.create({
+  container: { maxHeight: 30, alignItems: "center" },
   select: { flex: 1 },
   input: { width: 45 },
 });

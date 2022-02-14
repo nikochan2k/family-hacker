@@ -1,14 +1,16 @@
 // @ts-ignore
 import { NES } from "jsnes";
 import React, { PureComponent } from "react";
-import { EmulatorProps } from "./EmulatorCommon";
 import FrameTimer from "../features/FrameTimer";
 import KeyboardController from "../features/KeyboardController";
+import { EmulatorProps, nesMap } from "./EmulatorCommon";
 import { Screen } from "./Screen";
 
-export let mem: number[] | undefined;
 export class Emulator extends PureComponent<EmulatorProps> {
+  private static index = 0;
+
   public nes?: NES;
+  public key = "";
 
   private fpsInterval?: number;
   private frameTimer?: FrameTimer;
@@ -26,6 +28,8 @@ export class Emulator extends PureComponent<EmulatorProps> {
       onFrame: this.screen.setBuffer,
       onStatusUpdate: console.log,
     });
+    this.key = Emulator.index.toString(16);
+    Emulator.index++;
 
     this.frameTimer = new FrameTimer({
       onGenerateFrame: () => this.nes.frame(),
@@ -78,7 +82,7 @@ export class Emulator extends PureComponent<EmulatorProps> {
   public start = () => {
     if (!this.frameTimer || this.started) return;
     this.started = true;
-    mem = this.nes.cpu.mem;
+    nesMap[this.key] = this.nes;
     this.frameTimer.start();
     this.fpsInterval = window.setInterval(() => {
       console.log(`FPS: ${this.nes.getFPS()}`);
@@ -88,7 +92,7 @@ export class Emulator extends PureComponent<EmulatorProps> {
   public stop = () => {
     if (!this.frameTimer || !this.started) return;
     this.started = false;
-    mem = undefined;
+    delete nesMap[this.key];
     this.frameTimer.stop();
     window.clearInterval(this.fpsInterval);
   };
