@@ -12,7 +12,6 @@ export class Emulator extends PureComponent<EmulatorProps> {
   public nes?: NES;
   public key = "";
 
-  private fpsInterval?: number;
   private frameTimer?: FrameTimer;
   private keyboardController?: KeyboardController;
   private screen?: Screen;
@@ -84,9 +83,6 @@ export class Emulator extends PureComponent<EmulatorProps> {
     this.started = true;
     nesMap[this.key] = this.nes;
     this.frameTimer.start();
-    this.fpsInterval = window.setInterval(() => {
-      console.log(`FPS: ${this.nes.getFPS()}`);
-    }, 1000);
   };
 
   public stop = () => {
@@ -94,7 +90,6 @@ export class Emulator extends PureComponent<EmulatorProps> {
     this.started = false;
     delete nesMap[this.key];
     this.frameTimer.stop();
-    window.clearInterval(this.fpsInterval);
   };
 
   /*
@@ -117,7 +112,7 @@ export class Emulator extends PureComponent<EmulatorProps> {
   };
 
   private onKeyPress = (e: KeyboardEvent) => {
-    e.preventDefault();
+    // e.preventDefault();
   };
 
   private onKeyUp = (e: KeyboardEvent) => {

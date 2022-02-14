@@ -25,27 +25,33 @@ export const FollowingCondition: VFC = () => {
     [condition]
   );
 
-  const setText = useCallback((text) => {
-    if (!text) {
-      setCondition({ ...condition, value: 0 });
-      return;
-    }
-    let value = Math.trunc(text as any);
-    if (isNaN(value)) {
-      return;
-    }
-    if (value < 0) {
-      value = 0;
-    }
-    if (256 <= value) {
-      value = 255;
-    }
-    setCondition({ ...condition, value });
-  }, []);
+  const setText = useCallback(
+    (text) => {
+      if (!text) {
+        setCondition({ ...condition, value: 0 });
+        return;
+      }
+      let value = Math.trunc(text as any);
+      if (isNaN(value)) {
+        return;
+      }
+      if (value < 0) {
+        value = 0;
+      }
+      if (256 <= value) {
+        value = 255;
+      }
+      setCondition({ ...condition, value });
+    },
+    [condition]
+  );
+
+  const hasText = 0 <= ["≠?", ">?", "<?"].indexOf(condition.expr);
 
   return (
     <HStack style={styles.container}>
       <Select
+        width={hasText ? 270 : 320}
         selectedValue={condition.expr}
         onValueChange={(value) =>
           setCondition({ ...condition, expr: value as ExprType })
@@ -63,12 +69,8 @@ export const FollowingCondition: VFC = () => {
         <Select.Item label=">? (greater than last value)" value=">?" />
         <Select.Item label="<? (less than last value)" value="<?" />
       </Select>
-      {0 <= ["≠?", ">?", "<?"].indexOf(condition.expr) ? (
-        <Input
-          style={styles.input}
-          value={condition.value + ""}
-          onChangeText={setText}
-        />
+      {hasText ? (
+        <Input width={50} value={condition.value + ""} onChangeText={setText} />
       ) : (
         <Fragment />
       )}
@@ -78,7 +80,6 @@ export const FollowingCondition: VFC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { maxHeight: 30, alignItems: "center" },
+  container: { alignItems: "center" },
   select: { flex: 1 },
-  input: { width: 45 },
 });
