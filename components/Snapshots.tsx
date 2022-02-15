@@ -1,21 +1,17 @@
 import { Button, HStack, Text, VStack } from "native-base";
-import React, { Fragment, VFC } from "react";
+import React, { Fragment, useCallback, VFC } from "react";
 import { StyleSheet } from "react-native";
-import { useRecoilCallback, useRecoilValue } from "recoil";
-import { Snapshot, snapshotsAtom } from "../stores/snapshots";
+import { useRecoilState } from "recoil";
+import { snapshotsAtom } from "../stores/snapshots";
 import { Memories } from "./Memories";
 
 export const Snapshots: VFC = () => {
-  const snapshots = useRecoilValue(snapshotsAtom);
+  const [snapshots, setSnapshots] = useRecoilState(snapshotsAtom);
 
-  const removeSnapshot = useRecoilCallback(
-    ({ set }) =>
-      (snapshots: Snapshot[]) => {
-        const newSnapshots = snapshots.slice(0, snapshots.length - 1);
-        set(snapshotsAtom, newSnapshots);
-      },
-    []
-  );
+  const removeLast = useCallback(() => {
+    const newSnapshots = snapshots.slice(0, snapshots.length - 1);
+    setSnapshots(newSnapshots);
+  }, [snapshots]);
 
   if (snapshots.length === 0) {
     return <Fragment />;
@@ -24,9 +20,23 @@ export const Snapshots: VFC = () => {
   const last = snapshots[snapshots.length - 1];
   return (
     <VStack>
-      <Text margin={"5px"} color="#666" bold>
-        Inspection
-      </Text>
+      <HStack style={styles.title}>
+        <Text color="#666" bold>
+          Inspection
+        </Text>
+        {0 < snapshots.length ? (
+          <Button
+            variant="link"
+            size="sm"
+            colorScheme="danger"
+            onPress={() => setSnapshots([])}
+          >
+            clear
+          </Button>
+        ) : (
+          <Fragment />
+        )}
+      </HStack>
       <HStack marginLeft={"10px"}>
         {snapshots.map((current, index) => (
           <VStack>
@@ -42,7 +52,7 @@ export const Snapshots: VFC = () => {
                   marginLeft="5px"
                   variant="ghost"
                   colorScheme="danger"
-                  onPress={() => removeSnapshot(snapshots)}
+                  onPress={removeLast}
                 >
                   ×
                 </Button>
@@ -59,6 +69,10 @@ export const Snapshots: VFC = () => {
 };
 
 const styles = StyleSheet.create({
+  title: {
+    margin: 5,
+    alignItems: "center",
+  },
   header: {
     alignItems: "center",
     justifyContent: "center",
