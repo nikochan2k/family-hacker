@@ -1,5 +1,5 @@
 // @ts-ignore
-import { HStack } from "native-base";
+import { Box, Text, View } from "native-base";
 import React, { Fragment, VFC } from "react";
 import { useRecoilValue } from "recoil";
 import { FirstCondition } from "../components/FirstCondition";
@@ -12,16 +12,23 @@ export const ConditionView: VFC = () => {
   const snapshots = useRecoilValue(snapshotsAtom);
 
   return (
-    <HStack>
+    <View>
       {nesKey ? (
-        snapshots.length === 0 ? (
-          <FirstCondition />
-        ) : (
-          <FollowingCondition />
-        )
+        <>
+          <Text margin={"5px"} color="#666" bold>
+            Condition
+          </Text>
+          <Box marginLeft={"10px"}>
+            {snapshots.length === 0 ? (
+              <FirstCondition />
+            ) : (
+              <FollowingCondition />
+            )}
+          </Box>
+        </>
       ) : (
         <Fragment />
       )}
-    </HStack>
+    </View>
   );
 };

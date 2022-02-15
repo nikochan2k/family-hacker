@@ -51,7 +51,7 @@ export const FirstCondition: VFC = () => {
   return (
     <HStack style={styles.container}>
       <Select
-        width={hasText ? 270 : 320}
+        minWidth={hasText ? 260 : 310}
         selectedValue={condition.expr}
         onValueChange={(value) =>
           setCondition({ ...condition, expr: value as ExprType })

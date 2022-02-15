@@ -46,12 +46,12 @@ export const FollowingCondition: VFC = () => {
     [condition]
   );
 
-  const hasText = 0 <= ["≠?", ">?", "<?"].indexOf(condition.expr);
+  const hasText = ["≠?", ">?", "<?"].indexOf(condition.expr) < 0;
 
   return (
     <HStack style={styles.container}>
       <Select
-        width={hasText ? 270 : 320}
+        minWidth={hasText ? 260 : 310}
         selectedValue={condition.expr}
         onValueChange={(value) =>
           setCondition({ ...condition, expr: value as ExprType })
