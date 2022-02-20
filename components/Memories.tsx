@@ -1,4 +1,5 @@
-import React, { VFC } from "react";
+import { Text } from "native-base";
+import React, { Fragment, VFC } from "react";
 import { Byte } from "../stores/snapshots";
 import { Memory } from "./Memory";
 
@@ -15,8 +16,9 @@ export const Memories: VFC<{ current: Byte[]; last: Byte[] }> = ({
     );
   }
 
-  if (50 < bytes.length) {
-    bytes = bytes.slice(0, 50);
+  let more = 16 < bytes.length;
+  if (more) {
+    bytes = bytes.slice(0, 16);
   }
 
   return (
@@ -24,6 +26,7 @@ export const Memories: VFC<{ current: Byte[]; last: Byte[] }> = ({
       {bytes.map((byte) => (
         <Memory byte={byte} isLast={current === last} />
       ))}
+      {more ? <Text>...</Text> : <Fragment />}
     </>
   );
 };

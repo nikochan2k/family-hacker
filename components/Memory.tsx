@@ -1,40 +1,46 @@
 import { Box, HStack, Text } from "native-base";
-import React, { useCallback, useState, VFC } from "react";
+import React, { useState, VFC } from "react";
 import {
   Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useRecoilCallback } from "recoil";
+import { nesKeyAtom } from "../stores/nes";
 import { Byte } from "../stores/snapshots";
+import { nesMap } from "./EmulatorCommon";
 
 export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
   const [byte, setByte] = useState(data.byte);
   const [editing, setEditing] = useState(false);
 
-  const setText = useCallback(
-    (text: string) => {
-      if (!text) {
-        setByte({ ...byte, value: data.byte.value });
-        return;
-      }
-      if (/[^0-9A-Fa-f]/.test(text) || 2 < text.length) {
-        setByte({ ...byte, value: data.byte.value });
-        return;
-      }
-      let value = parseInt(text, 16);
-      if (isNaN(value)) {
-        setByte({ ...byte, value: data.byte.value });
-        return;
-      }
-      if (value < 0) {
-        value = 0;
-      }
-      if (256 <= value) {
-        value = 255;
-      }
-      setByte({ ...byte, value });
-    },
+  const setText = useRecoilCallback(
+    ({ snapshot }) =>
+      async (text: string) => {
+        const nesKey = await snapshot.getPromise(nesKeyAtom);
+        const nes = nesMap[nesKey];
+        if (!text) {
+          nes.cpu.mem[byte.address] = data.byte.value;
+          setByte({ ...byte, value: data.byte.value });
+          return;
+        }
+        if (/[^0-9A-Fa-f]/.test(text) || 2 < text.length) {
+          return;
+        }
+        let value = parseInt(text, 16);
+        if (isNaN(value)) {
+          return;
+        }
+        if (value < 0) {
+          value = 0;
+        }
+        if (256 <= value) {
+          value = 255;
+        }
+        nes.cpu.mem[byte.address] = value;
+        setByte({ ...byte, value });
+      },
     [byte]
   );
 

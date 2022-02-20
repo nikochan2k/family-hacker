@@ -1,10 +1,11 @@
 import { getDocumentAsync } from "expo-document-picker";
-import { Text } from "native-base";
+import { Button, HStack, Switch, Text, View, VStack } from "native-base";
 import React, { Fragment, useEffect, useState, VFC } from "react";
-import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
-import { useRecoilCallback, useSetRecoilState } from "recoil";
+import { Dimensions, StyleSheet } from "react-native";
+import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
 import { Emulator } from "../components/Emulator";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../components/ScreenCommon";
+import { hackingAtom } from "../stores/main";
 import { nesKeyAtom } from "../stores/nes";
 import { snapshotsAtom } from "../stores/snapshots";
 
@@ -19,6 +20,7 @@ interface Cartridge {
 export const PlayView: VFC = () => {
   const [cartridge, setCartridge] = useState<Cartridge>();
   const [screen, setScreen] = useState<{ width: number; height: number }>();
+  const [hacking, setHacking] = useRecoilState(hackingAtom);
   const setNesKey = useSetRecoilState(nesKeyAtom);
 
   useEffect(() => {
@@ -60,31 +62,52 @@ export const PlayView: VFC = () => {
   }
 
   return (
-    <TouchableOpacity
+    <VStack
       style={{
-        flex: 1,
-        backgroundColor: "#333",
-        alignItems: "center",
-        justifyContent: "center",
         minWidth: screen.width,
         maxWidth: screen.width,
-        minHeight: screen.height,
-        maxHeight: screen.height,
       }}
-      onPress={openRom}
     >
-      {cartridge ? (
-        <Emulator
-          key={cartridge.ticks}
-          romData={cartridge.romData}
-          ref={(ref) => setNesKey(ref?.key || "")}
-        />
-      ) : (
-        <Text fontSize="lg" style={styles.text}>
-          Press to open rom...
-        </Text>
-      )}
-    </TouchableOpacity>
+      <HStack style={{ alignItems: "center", justifyContent: "space-between" }}>
+        <Button onPress={openRom}>Open ROM...</Button>
+        {cartridge ? (
+          <HStack>
+            <Text color={"danger.400"}>Hack</Text>
+            <Switch
+              value={hacking}
+              onValueChange={(value) => setHacking(value)}
+              marginLeft={"5px"}
+              offTrackColor="danger.100"
+              onTrackColor="danger.200"
+              onThumbColor="danger.500"
+              offThumbColor="danger.50"
+            />
+          </HStack>
+        ) : (
+          <Fragment />
+        )}
+      </HStack>
+      <View
+        style={{
+          backgroundColor: "#333",
+          marginTop: 10,
+          minWidth: screen.width,
+          maxWidth: screen.width,
+          minHeight: screen.height,
+          maxHeight: screen.height,
+        }}
+      >
+        {cartridge ? (
+          <Emulator
+            key={cartridge.ticks}
+            romData={cartridge.romData}
+            ref={(ref) => setNesKey(ref?.key || "")}
+          />
+        ) : (
+          <Fragment />
+        )}
+      </View>
+    </VStack>
   );
 };
 
