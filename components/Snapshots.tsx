@@ -21,13 +21,14 @@ export const Snapshots: VFC = () => {
   return (
     <VStack>
       <HStack style={styles.title}>
-        <Text color="#666" bold>
+        <Text color="dark.300" size="container" bold>
           Inspection
         </Text>
         {0 < snapshots.length ? (
           <Button
+            marginLeft="10px"
             variant="link"
-            size="sm"
+            size="container"
             colorScheme="danger"
             onPress={() => setSnapshots([])}
           >
@@ -44,11 +45,7 @@ export const Snapshots: VFC = () => {
               <Text>{index}</Text>
               {last === current ? (
                 <Button
-                  size="sm"
-                  paddingTop="0px"
-                  paddingBottom="0px"
-                  paddingLeft="2px"
-                  paddingRight="2px"
+                  size="container"
                   marginLeft="5px"
                   variant="ghost"
                   colorScheme="danger"
