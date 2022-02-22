@@ -40,7 +40,7 @@ export const Snapshots: VFC = () => {
       </HStack>
       <HStack marginLeft={"10px"}>
         {snapshots.map((current, index) => (
-          <VStack>
+          <VStack key={index}>
             <HStack style={styles.header}>
               <Text>{index}</Text>
               {last === current ? (

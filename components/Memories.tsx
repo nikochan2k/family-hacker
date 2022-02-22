@@ -24,7 +24,7 @@ export const Memories: VFC<{ current: Byte[]; last: Byte[] }> = ({
   return (
     <>
       {bytes.map((byte) => (
-        <Memory byte={byte} isLast={current === last} />
+        <Memory key={byte.address} byte={byte} isLast={current === last} />
       ))}
       {more ? <Text>...</Text> : <Fragment />}
     </>
