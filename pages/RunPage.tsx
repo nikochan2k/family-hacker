@@ -4,9 +4,9 @@ import { StyleSheet } from "react-native";
 import { useRecoilValue } from "recoil";
 import { ModModal } from "../components/hacking/modifications/ModModal";
 import { Mods } from "../components/hacking/modifications/Mods";
-import { Snapshots } from "../components/hacking/inspection/Snapshots";
+import { Snapshots } from "../components/hacking/inspections/Snapshots";
 import { hackingAtom } from "../stores/main";
-import { ConditionView } from "../views/ConditionView";
+import { Hacking } from "../components/hacking/Hacking";
 import { Console } from "../components/console/Console";
 
 export const RunPage: VFC = () => {
@@ -18,7 +18,7 @@ export const RunPage: VFC = () => {
       <Console />
       {hacking ? (
         <VStack marginLeft={"10px"}>
-          <ConditionView />
+          <Hacking />
           <Snapshots />
           <Mods />
         </VStack>

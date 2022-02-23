@@ -2,12 +2,12 @@
 import { Box, Text } from "native-base";
 import React, { Fragment, VFC } from "react";
 import { useRecoilValue } from "recoil";
-import { FirstCondition } from "../components/hacking/condition/FirstCondition";
-import { FollowingCondition } from "../components/hacking/condition/FollowingCondition";
-import { nesKeyAtom } from "../stores/nes";
-import { snapshotsAtom } from "../stores/snapshots";
+import { FirstCondition } from "./condition/FirstCondition";
+import { FollowingCondition } from "./condition/FollowingCondition";
+import { nesKeyAtom } from "../../stores/nes";
+import { snapshotsAtom } from "../../stores/snapshots";
 
-export const ConditionView: VFC = () => {
+export const Hacking: VFC = () => {
   const nesKey = useRecoilValue(nesKeyAtom);
   const snapshots = useRecoilValue(snapshotsAtom);
 
