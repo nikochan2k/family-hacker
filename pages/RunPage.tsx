@@ -14,7 +14,7 @@ export const RunPage: VFC = () => {
     <HStack style={styles.container}>
       <PlayView />
       {hacking ? (
-        <VStack>
+        <VStack marginLeft={"10px"}>
           <ConditionView />
           <Snapshots />
         </VStack>

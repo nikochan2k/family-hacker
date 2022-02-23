@@ -6,7 +6,11 @@ import { RunPage } from "./pages/RunPage";
 export default function App() {
   return (
     <RecoilRoot>
-      <NativeBaseProvider>
+      <NativeBaseProvider
+        config={{
+          suppressColorAccessibilityWarning: true,
+        }}
+      >
         <RunPage />
       </NativeBaseProvider>
     </RecoilRoot>

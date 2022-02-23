@@ -1,11 +1,6 @@
 import { Box, HStack, Input, Link, Text } from "native-base";
-import React, { useCallback, useState, VFC } from "react";
-import {
-  Platform,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import React, { useCallback, useRef, useState, VFC } from "react";
+import { Platform, StyleSheet } from "react-native";
 import { useRecoilCallback } from "recoil";
 import { nesKeyAtom } from "../stores/nes";
 import { Byte } from "../stores/snapshots";
@@ -14,6 +9,7 @@ import { nesMap } from "./EmulatorCommon";
 export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
   const [byte, setByte] = useState(data.byte);
   const [editing, setEditing] = useState(false);
+  const submited = useRef(false);
 
   const setText = useCallback(
     async (text: string) => {
@@ -39,31 +35,26 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
     [byte]
   );
 
-  const commit = useRecoilCallback(
+  const onSubmit = useRecoilCallback(
     ({ snapshot }) =>
       async () => {
         const nesKey = await snapshot.getPromise(nesKeyAtom);
         const nes = nesMap[nesKey];
-        console.log("commit", byte.value);
         nes.cpu.mem[byte.address] = byte.value;
+        submited.current = true;
         setEditing(false);
       },
     [byte]
   );
 
-  const cancel = useRecoilCallback(
-    ({ snapshot }) =>
-      async () => {
-        const nesKey = await snapshot.getPromise(nesKeyAtom);
-        const nes = nesMap[nesKey];
-        console.log("cancel", nes.cpu.mem[byte.address], data.byte.value);
-        if (nes.cpu.mem[byte.address] === data.byte.value) {
-          setByte(data.byte);
-        }
-        setEditing(false);
-      },
-    [byte]
-  );
+  const onBlur = useCallback(async () => {
+    if (submited.current) {
+      submited.current = false;
+    } else {
+      setByte(data.byte);
+    }
+    setEditing(false);
+  }, [byte]);
 
   const isLast = data.isLast;
 
@@ -82,9 +73,8 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
             size="container"
             value={byte.value.toString(16).toUpperCase()}
             onChangeText={setText}
-            onSubmitEditing={commit}
-            onEndEditing={cancel}
-            onBlur={cancel}
+            onSubmitEditing={onSubmit}
+            onBlur={onBlur}
           />
         ) : (
           <Link
