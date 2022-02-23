@@ -3,10 +3,10 @@ import React, { Fragment, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilValue } from "recoil";
 import { ModModal } from "../components/hacking/modifications/ModModal";
-import { Mods } from "../components/hacking/modifications/Mods";
-import { Snapshots } from "../components/hacking/inspections/Snapshots";
+import { ModsPane } from "../components/hacking/modifications/ModsPane";
+import { InspectionsPane } from "../components/hacking/inspections/InspectionsPane";
 import { hackingAtom } from "../stores/main";
-import { Hacking } from "../components/hacking/Hacking";
+import { Hacking } from "../components/hacking/condition/ConditionPane";
 import { Console } from "../components/console/Console";
 
 export const RunPage: VFC = () => {
@@ -19,8 +19,8 @@ export const RunPage: VFC = () => {
       {hacking ? (
         <VStack marginLeft={"10px"}>
           <Hacking />
-          <Snapshots />
-          <Mods />
+          <InspectionsPane />
+          <ModsPane />
         </VStack>
       ) : (
         <Fragment />

@@ -3,7 +3,7 @@ import React, { Fragment, VFC } from "react";
 import { Byte } from "../../../stores/snapshots";
 import { Memory } from "./Memory";
 
-export const Memories: VFC<{ current: Byte[]; last: Byte[] }> = ({
+export const Inspection: VFC<{ current: Byte[]; last: Byte[] }> = ({
   current,
   last,
 }) => {

@@ -2,10 +2,10 @@
 import { Box, Text } from "native-base";
 import React, { Fragment, VFC } from "react";
 import { useRecoilValue } from "recoil";
-import { FirstCondition } from "./condition/FirstCondition";
-import { FollowingCondition } from "./condition/FollowingCondition";
-import { nesKeyAtom } from "../../stores/nes";
-import { snapshotsAtom } from "../../stores/snapshots";
+import { FirstCondition } from "./FirstCondition";
+import { FollowingCondition } from "./FollowingCondition";
+import { nesKeyAtom } from "../../../stores/nes";
+import { snapshotsAtom } from "../../../stores/snapshots";
 
 export const Hacking: VFC = () => {
   const nesKey = useRecoilValue(nesKeyAtom);
@@ -13,7 +13,7 @@ export const Hacking: VFC = () => {
 
   return nesKey ? (
     <>
-      <Text margin={"5px"} color="#666" bold>
+      <Text size="container" bold>
         Condition
       </Text>
       <Box marginLeft={"10px"}>

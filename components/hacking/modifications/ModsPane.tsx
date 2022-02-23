@@ -5,19 +5,23 @@ import { useRecoilState } from "recoil";
 import { modificationsAtom } from "../../../stores/modifications";
 import { Mod } from "./Mod";
 
-export const Mods: VFC = () => {
+export const ModsPane: VFC = () => {
   const [mods, setMods] = useRecoilState(modificationsAtom);
+
+  if (mods.length === 0) {
+    return <Fragment />;
+  }
 
   return (
     <VStack>
       <HStack style={styles.title}>
-        <Text color="dark.300" size="container" bold>
+        <Text size="container" bold>
           Modifications
         </Text>
         {0 < mods.length ? (
           <Button
             marginLeft="10px"
-            variant="link"
+            variant="ghost"
             size="container"
             colorScheme="danger"
             onPress={() => setMods([])}
@@ -28,7 +32,7 @@ export const Mods: VFC = () => {
           <Fragment />
         )}
       </HStack>
-      <VStack>
+      <VStack marginLeft="10px">
         {mods.map((mod) => (
           <Mod mod={mod} />
         ))}
@@ -39,7 +43,7 @@ export const Mods: VFC = () => {
 
 const styles = StyleSheet.create({
   title: {
-    margin: 5,
+    marginTop: 5,
     alignItems: "center",
   },
 });
