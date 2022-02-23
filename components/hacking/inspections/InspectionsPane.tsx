@@ -3,14 +3,13 @@ import React, { Fragment, useCallback, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilState } from "recoil";
 import { Condition, snapshotsAtom } from "../../../stores/snapshots";
-import { toHex } from "../../../util";
 import { Inspection } from "./Inspection";
 
 function condToStr(cond: Condition) {
   if (["*", "≠?", ">?", "<?"].indexOf(cond.expr) >= 0) {
     return cond.expr;
   }
-  return cond.expr + toHex(cond.value, 2);
+  return cond.expr + cond.value;
 }
 
 export const InspectionsPane: VFC = () => {

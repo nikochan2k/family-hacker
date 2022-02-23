@@ -67,7 +67,7 @@ export const addSnapshot = (
       filter = (v: number, p: number) => v == p + cond.value;
       break;
     case "-":
-      filter = (v: number, p: number) => v == p + cond.value;
+      filter = (v: number, p: number) => v == p - cond.value;
       break;
     case "≠?":
       filter = (v: number, p: number) => v !== p;

@@ -34,6 +34,9 @@ export const FollowingCondition: VFC = () => {
         setCondition({ ...condition, value: 0 });
         return;
       }
+      if (/[^0-9]/.test(text)) {
+        return;
+      }
       let value = Math.trunc(text as any);
       if (isNaN(value)) {
         return;
