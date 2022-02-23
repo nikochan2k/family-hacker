@@ -31,43 +31,46 @@ export const ModModal: VFC = () => {
     }
   }, [modification]);
 
-  const setValue = useCallback(async (text: string, isAddress: boolean) => {
-    if (!text) {
-      if (isAddress) {
-        setMod({ ...mod, address: 0 });
-      } else {
-        setMod({ ...mod, value: 0 });
+  const setValue = useCallback(
+    async (mod: Modification, text: string, isAddress: boolean) => {
+      if (!text) {
+        if (isAddress) {
+          setMod({ ...mod, address: 0 });
+        } else {
+          setMod({ ...mod, value: 0 });
+        }
+        return;
       }
-      return;
-    }
 
-    let value: number;
-    if (isAddress) {
-      if (/[^0-9A-Fa-f]/.test(text) || 4 < text.length) {
+      let value: number;
+      if (isAddress) {
+        if (/[^0-9A-Fa-f]/.test(text) || 4 < text.length) {
+          return;
+        }
+        value = parseInt(text, 16);
+        if (0x0800 <= value) {
+          value = 0x07ff;
+        }
+      } else {
+        if (/[^0-9]/.test(text)) {
+          return;
+        }
+        value = parseInt(text);
+        if (256 <= value) {
+          value = 255;
+        }
+      }
+      if (isNaN(value) || value < 0) {
         return;
       }
-      value = parseInt(text, 16);
-      if (0x0800 <= value) {
-        value = 0x07ff;
+      if (isAddress) {
+        setMod({ ...mod, address: value });
+      } else {
+        setMod({ ...mod, value });
       }
-    } else {
-      if (/[^0-9]/.test(text)) {
-        return;
-      }
-      value = parseInt(text);
-      if (256 <= value) {
-        value = 255;
-      }
-    }
-    if (isNaN(value) || value < 0) {
-      return;
-    }
-    if (isAddress) {
-      setMod({ ...mod, address: value });
-    } else {
-      setMod({ ...mod, value });
-    }
-  }, []);
+    },
+    []
+  );
 
   const setModification = useRecoilCallback(
     ({ snapshot, set }) =>
@@ -97,8 +100,6 @@ export const ModModal: VFC = () => {
           modifications.push(mod);
         }
 
-        console.log(modifications);
-
         set(modificationsAtom, modifications);
         set(modificationAtom, null);
       },
@@ -125,7 +126,7 @@ export const ModModal: VFC = () => {
                 maxWidth="52px"
                 maxLength={4}
                 value={toHex(mod.address, 4)}
-                onChangeText={(text) => setValue(text, true)}
+                onChangeText={(text) => setValue(mod, text, true)}
               />
             </FormControl>
             <FormControl>
@@ -135,7 +136,7 @@ export const ModModal: VFC = () => {
                   maxWidth="39px"
                   maxLength={3}
                   value={"" + mod.value}
-                  onChangeText={(text) => setValue(text, false)}
+                  onChangeText={(text) => setValue(mod, text, false)}
                 />
                 <Text marginLeft="10px" color="dark.500">
                   {toHex(mod.value, 2)}

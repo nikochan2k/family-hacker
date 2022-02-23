@@ -3,11 +3,12 @@ import { Button, HStack, Switch, Text, View, VStack } from "native-base";
 import React, { Fragment, useEffect, useState, VFC } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
-import { Emulator } from "./emulator/Emulator";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "./screen/ScreenCommon";
 import { hackingAtom } from "../../stores/main";
+import { modificationsAtom } from "../../stores/modifications";
 import { nesKeyAtom, nesMap } from "../../stores/nes";
 import { snapshotsAtom } from "../../stores/snapshots";
+import { Emulator } from "./emulator/Emulator";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "./screen/ScreenCommon";
 
 const MAX_BYTES = (4 * 1024 * 1024) / 8;
 
@@ -53,6 +54,7 @@ export const Console: VFC = () => {
         });
         setCartridge({ romData, name: file.name, ticks: Date.now() });
         set(snapshotsAtom, []);
+        set(modificationsAtom, []);
       },
     []
   );
