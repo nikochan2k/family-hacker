@@ -3,8 +3,9 @@ import { Button, HStack, Switch, Text, View, VStack } from "native-base";
 import React, { Fragment, useEffect, useState, VFC } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
+import { download } from "../../download";
 import { hackingAtom } from "../../stores/main";
-import { modificationsAtom } from "../../stores/modifications";
+import { Modification, modificationsAtom } from "../../stores/modifications";
 import { nesKeyAtom, nesMap } from "../../stores/nes";
 import { snapshotsAtom } from "../../stores/snapshots";
 import { Emulator } from "./emulator/Emulator";
@@ -66,6 +67,46 @@ export const Console: VFC = () => {
     set(snapshotsAtom, []);
   });
 
+  const load = useRecoilCallback(({ snapshot, set }) => async () => {
+    const picked = await getDocumentAsync({
+      multiple: false,
+      type: "text/json",
+    });
+    if (picked.type === "cancel") {
+      return;
+    }
+    const fileList = picked.output;
+    if (!fileList || fileList.length === 0) {
+      return;
+    }
+    const file = fileList[0] as File;
+    const reader = new FileReader();
+    const json = await new Promise<string>((resolve, reject) => {
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (ev) => reject(reader.error || ev);
+      reader.readAsText(file);
+    });
+    const obj = JSON.parse(json);
+
+    const nesKey = await snapshot.getPromise(nesKeyAtom);
+    const nes = nesMap[nesKey];
+    nes.fromJSON(obj);
+
+    const modifications = obj.modifications as Modification[];
+    if (Array.isArray(modifications)) {
+      set(modificationsAtom, modifications);
+    }
+  });
+
+  const save = useRecoilCallback(({ snapshot }) => async () => {
+    const nesKey = await snapshot.getPromise(nesKeyAtom);
+    const nes = nesMap[nesKey];
+    const obj = nes.toJSON();
+    obj.modifications = await snapshot.getPromise(modificationsAtom);
+    const json = JSON.stringify(obj);
+    download(json);
+  });
+
   if (!screen) {
     return <Fragment />;
   }
@@ -79,15 +120,22 @@ export const Console: VFC = () => {
     >
       <HStack style={{ alignItems: "center", justifyContent: "space-between" }}>
         <HStack>
-          <Button onPress={openRom}>Open ROM...</Button>
-          <Button
-            disabled={!cartridge}
-            colorScheme={cartridge ? "warning" : "light"}
-            marginLeft={"10px"}
-            onPress={reset}
-          >
-            Reset
-          </Button>
+          <Button onPress={openRom}>Open ROM</Button>
+          {cartridge ? (
+            <>
+              <Button colorScheme="warning" marginLeft={"10px"} onPress={reset}>
+                Reset
+              </Button>
+              <Button colorScheme="success" marginLeft={"10px"} onPress={save}>
+                Save state
+              </Button>
+              <Button colorScheme="success" marginLeft={"10px"} onPress={load}>
+                Load state
+              </Button>
+            </>
+          ) : (
+            <Fragment />
+          )}
         </HStack>
         {cartridge ? (
           <HStack>
