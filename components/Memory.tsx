@@ -4,6 +4,7 @@ import { Platform, StyleSheet } from "react-native";
 import { useRecoilCallback } from "recoil";
 import { nesKeyAtom } from "../stores/nes";
 import { Byte } from "../stores/snapshots";
+import { toHex } from "../util";
 import { nesMap } from "./EmulatorCommon";
 
 export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
@@ -38,9 +39,14 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
   const onSubmit = useRecoilCallback(
     ({ snapshot }) =>
       async () => {
+        if (byte.value === data.byte.value) {
+          return;
+        }
+
         const nesKey = await snapshot.getPromise(nesKeyAtom);
         const nes = nesMap[nesKey];
         nes.cpu.mem[byte.address] = byte.value;
+
         submited.current = true;
         setEditing(false);
       },
@@ -62,7 +68,7 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
     <HStack style={styles.container}>
       <Box style={styles.box} width={"44px"}>
         <Text size="container" color="dark.300">
-          {byte.address.toString(16).toUpperCase().padStart(4, "0")}
+          {toHex(byte.value, 4)}
         </Text>
       </Box>
       <Box style={styles.box} width={"22px"}>
@@ -71,7 +77,7 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
             margin={0}
             padding={0}
             size="container"
-            value={byte.value.toString(16).toUpperCase()}
+            value={toHex(byte.value)}
             onChangeText={setText}
             onSubmitEditing={onSubmit}
             onBlur={onBlur}
@@ -83,12 +89,10 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
               color: data.byte.value !== byte.value ? "red.500" : "dark.300",
             }}
           >
-            {byte.value.toString(16).toUpperCase().padStart(2, "0")}
+            {toHex(byte.value, 2)}
           </Link>
         ) : (
-          <Text color="dark.300">
-            {byte.value.toString(16).toUpperCase().padStart(2, "0")}
-          </Text>
+          <Text color="dark.300">{toHex(byte.value, 2)}</Text>
         )}
       </Box>
     </HStack>
