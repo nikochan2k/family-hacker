@@ -2,14 +2,13 @@ import { Button, HStack, Input, Select } from "native-base";
 import React, { Fragment, useCallback, useState, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilCallback } from "recoil";
-import { nesKeyAtom } from "../../../stores/nes";
+import { nesKeyAtom, nesMap } from "../../../stores/nes";
 import {
   addSnapshot,
   Condition,
   ExprType,
   snapshotsAtom,
 } from "../../../stores/snapshots";
-import { nesMap } from "../../emulator/EmulatorCommon";
 
 export const FollowingCondition: VFC = () => {
   const [condition, setCondition] = useState<Condition>({

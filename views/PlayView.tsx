@@ -4,13 +4,12 @@ import React, { Fragment, useEffect, useState, VFC } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
 import { Emulator } from "../components/emulator/Emulator";
-import { nesMap } from "../components/emulator/EmulatorCommon";
 import {
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
 } from "../components/emulator/ScreenCommon";
 import { hackingAtom } from "../stores/main";
-import { nesKeyAtom } from "../stores/nes";
+import { nesKeyAtom, nesMap } from "../stores/nes";
 import { snapshotsAtom } from "../stores/snapshots";
 
 const MAX_BYTES = (4 * 1024 * 1024) / 8;

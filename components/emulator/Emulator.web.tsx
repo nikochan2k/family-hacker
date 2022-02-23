@@ -3,7 +3,8 @@ import { NES } from "jsnes";
 import React, { PureComponent } from "react";
 import FrameTimer from "../../features/FrameTimer";
 import KeyboardController from "../../features/KeyboardController";
-import { EmulatorProps, nesMap } from "./EmulatorCommon";
+import { nesMap } from "../../stores/nes";
+import { EmulatorProps } from "./EmulatorCommon";
 import { Screen } from "./Screen";
 
 export class Emulator extends PureComponent<EmulatorProps> {
