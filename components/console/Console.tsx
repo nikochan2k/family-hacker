@@ -38,7 +38,7 @@ export const Console: VFC = () => {
     setScreen({ width, height });
   }, []);
 
-  const openRom = useRecoilCallback(
+  const open = useRecoilCallback(
     ({ set }) =>
       async () => {
         const res = await getDocumentAsync({
@@ -120,17 +120,17 @@ export const Console: VFC = () => {
     >
       <HStack style={{ alignItems: "center", justifyContent: "space-between" }}>
         <HStack>
-          <Button onPress={openRom}>Open ROM</Button>
+          <Button onPress={open}>Open</Button>
           {cartridge ? (
             <>
               <Button colorScheme="warning" marginLeft={"10px"} onPress={reset}>
                 Reset
               </Button>
               <Button colorScheme="success" marginLeft={"10px"} onPress={save}>
-                Save state
+                Save
               </Button>
               <Button colorScheme="success" marginLeft={"10px"} onPress={load}>
-                Load state
+                Load
               </Button>
             </>
           ) : (
