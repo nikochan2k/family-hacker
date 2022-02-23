@@ -5,6 +5,7 @@ export default class FrameTimer {
   private lastFrameTime: number;
   private onGenerateFrame: () => void;
   private onWriteFrame: () => void;
+  private paused = false;
   private requestID = 0;
 
   constructor(props: FrameTimerProps) {
@@ -13,17 +14,31 @@ export default class FrameTimer {
     // Run on animation frame
     this.onWriteFrame = props.onWriteFrame;
     this.onAnimationFrame = this.onAnimationFrame.bind(this);
+    this.restart = this.pause.bind(this);
+    this.pause = this.pause.bind(this);
     this.interval = 1e3 / FPS;
     this.lastFrameTime = 0;
   }
 
+  public pause() {
+    this.paused = true;
+  }
+
+  public restart() {
+    this.paused = false;
+  }
+
   public start() {
     this.requestAnimationFrame();
+    window.addEventListener("focus", this.restart);
+    window.addEventListener("blur", this.pause);
   }
 
   public stop() {
     if (this.requestID) window.cancelAnimationFrame(this.requestID);
     this.lastFrameTime = 0;
+    window.removeEventListener("focus", this.restart);
+    window.removeEventListener("blur", this.pause);
   }
 
   private generateFrame() {
@@ -52,13 +67,14 @@ export default class FrameTimer {
 
     // This can happen a lot on a 144Hz display
     if (numFrames === 0) {
-      //console.log("WOAH, no frames");
       return;
     }
 
     // update display on first frame only
     this.generateFrame();
     this.onWriteFrame();
+
+    if (this.paused) return;
 
     // we generate additional frames evenly before the next
     // onAnimationFrame call.
