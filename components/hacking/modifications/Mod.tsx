@@ -1,4 +1,4 @@
-import { Button, HStack, Link, Text } from "native-base";
+import { Button, HStack, Link, Text, Tooltip } from "native-base";
 import React, { Fragment, VFC } from "react";
 import { useRecoilCallback, useSetRecoilState } from "recoil";
 import {
@@ -45,17 +45,19 @@ export const Mod: VFC<{ mod: Modification }> = ({ mod }) => {
       <Text minWidth="40px" size="container" color="dark.300">
         {toHex(mod.address, 4)}
       </Text>
-      <Link
-        minWidth="20px"
-        onPress={() => setModification(mod)}
-        _text={{
-          color: "dark.400",
-        }}
-      >
-        {toHex(mod.value, 2)}
-      </Link>
+      <Tooltip label={"" + mod.value}>
+        <Link
+          minWidth="22px"
+          onPress={() => setModification(mod)}
+          _text={{
+            color: "dark.400",
+          }}
+        >
+          {toHex(mod.value, 2)}
+        </Link>
+      </Tooltip>
       {mod.name ? (
-        <Text marginLeft="10px" color="dark.500" italic>
+        <Text marginLeft="5px" color="dark.500" italic>
           {mod.name}
         </Text>
       ) : (

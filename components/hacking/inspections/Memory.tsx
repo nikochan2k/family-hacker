@@ -1,4 +1,4 @@
-import { Box, HStack, Link, Text } from "native-base";
+import { HStack, Link, Text, Tooltip } from "native-base";
 import React, { VFC } from "react";
 import { useSetRecoilState } from "recoil";
 import { modificationAtom } from "../../../stores/modifications";
@@ -12,15 +12,14 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = ({
   const setMod = useSetRecoilState(modificationAtom);
 
   return (
-    <HStack>
-      <Box width={"40px"}>
-        <Text size="container" color="dark.300">
-          {toHex(byte.address, 4)}
-        </Text>
-      </Box>
-      <Box width={"20px"}>
+    <HStack alignItems="center">
+      <Text minWidth="40px" size="container" color="dark.300">
+        {toHex(byte.address, 4)}
+      </Text>
+      <Tooltip label={"" + byte.value}>
         {isLast ? (
           <Link
+            minWidth="22px"
             onPress={() =>
               setMod({ name: "", address: byte.address, value: byte.value })
             }
@@ -31,9 +30,11 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = ({
             {toHex(byte.value, 2)}
           </Link>
         ) : (
-          <Text color="dark.400">{toHex(byte.value, 2)}</Text>
+          <Text minWidth="20px" color="dark.400">
+            {toHex(byte.value, 2)}
+          </Text>
         )}
-      </Box>
+      </Tooltip>
     </HStack>
   );
 };
