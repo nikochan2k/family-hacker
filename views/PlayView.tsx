@@ -58,10 +58,11 @@ export const PlayView: VFC = () => {
     []
   );
 
-  const reset = useRecoilCallback(({ snapshot }) => async () => {
+  const reset = useRecoilCallback(({ snapshot, set }) => async () => {
     const nesKey = await snapshot.getPromise(nesKeyAtom);
     const nes = nesMap[nesKey];
     nes.reloadROM();
+    set(snapshotsAtom, []);
   });
 
   if (!screen) {
