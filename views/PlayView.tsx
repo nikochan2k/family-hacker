@@ -4,6 +4,7 @@ import React, { Fragment, useEffect, useState, VFC } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
 import { Emulator } from "../components/Emulator";
+import { nesMap } from "../components/EmulatorCommon";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../components/ScreenCommon";
 import { hackingAtom } from "../stores/main";
 import { nesKeyAtom } from "../stores/nes";
@@ -57,6 +58,12 @@ export const PlayView: VFC = () => {
     []
   );
 
+  const reset = useRecoilCallback(({ snapshot }) => async () => {
+    const nesKey = await snapshot.getPromise(nesKeyAtom);
+    const nes = nesMap[nesKey];
+    nes.reloadROM();
+  });
+
   if (!screen) {
     return <Fragment />;
   }
@@ -69,7 +76,17 @@ export const PlayView: VFC = () => {
       }}
     >
       <HStack style={{ alignItems: "center", justifyContent: "space-between" }}>
-        <Button onPress={openRom}>Open ROM...</Button>
+        <HStack>
+          <Button onPress={openRom}>Open ROM...</Button>
+          <Button
+            disabled={!cartridge}
+            colorScheme={cartridge ? "warning" : "light"}
+            marginLeft={"10px"}
+            onPress={reset}
+          >
+            Reset
+          </Button>
+        </HStack>
         {cartridge ? (
           <HStack>
             <Text color={"danger.400"}>Hack</Text>
