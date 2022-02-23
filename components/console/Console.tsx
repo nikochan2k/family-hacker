@@ -3,14 +3,11 @@ import { Button, HStack, Switch, Text, View, VStack } from "native-base";
 import React, { Fragment, useEffect, useState, VFC } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
-import { Emulator } from "../components/emulator/Emulator";
-import {
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
-} from "../components/emulator/ScreenCommon";
-import { hackingAtom } from "../stores/main";
-import { nesKeyAtom, nesMap } from "../stores/nes";
-import { snapshotsAtom } from "../stores/snapshots";
+import { Emulator } from "./emulator/Emulator";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "./screen/ScreenCommon";
+import { hackingAtom } from "../../stores/main";
+import { nesKeyAtom, nesMap } from "../../stores/nes";
+import { snapshotsAtom } from "../../stores/snapshots";
 
 const MAX_BYTES = (4 * 1024 * 1024) / 8;
 
@@ -20,7 +17,7 @@ interface Cartridge {
   ticks: number;
 }
 
-export const PlayView: VFC = () => {
+export const Console: VFC = () => {
   const [cartridge, setCartridge] = useState<Cartridge>();
   const [screen, setScreen] = useState<{ width: number; height: number }>();
   const [hacking, setHacking] = useRecoilState(hackingAtom);

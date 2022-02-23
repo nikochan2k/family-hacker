@@ -7,7 +7,7 @@ import { Mods } from "../components/hacking/modifications/Mods";
 import { Snapshots } from "../components/hacking/inspection/Snapshots";
 import { hackingAtom } from "../stores/main";
 import { ConditionView } from "../views/ConditionView";
-import { PlayView } from "../views/PlayView";
+import { Console } from "../components/console/Console";
 
 export const RunPage: VFC = () => {
   const hacking = useRecoilValue(hackingAtom);
@@ -15,7 +15,7 @@ export const RunPage: VFC = () => {
   return (
     <HStack style={styles.container}>
       <ModModal />
-      <PlayView />
+      <Console />
       {hacking ? (
         <VStack marginLeft={"10px"}>
           <ConditionView />

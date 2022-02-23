@@ -1,11 +1,11 @@
 // @ts-ignore
 import { NES } from "jsnes";
 import React, { PureComponent } from "react";
-import FrameTimer from "../../features/FrameTimer";
-import KeyboardController from "../../features/KeyboardController";
-import { nesMap } from "../../stores/nes";
+import FrameTimer from "../../../features/FrameTimer";
+import KeyboardController from "../../../features/KeyboardController";
+import { nesMap } from "../../../stores/nes";
 import { EmulatorProps } from "./EmulatorCommon";
-import { Screen } from "./Screen";
+import { Screen } from "../screen/Screen";
 
 export class Emulator extends PureComponent<EmulatorProps> {
   private static index = 0;
