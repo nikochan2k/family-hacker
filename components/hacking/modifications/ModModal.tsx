@@ -116,7 +116,7 @@ export const ModModal: VFC = () => {
             <FormControl>
               <FormControl.Label>Name (Optional)</FormControl.Label>
               <Input
-                maxLength={10}
+                maxLength={20}
                 onChangeText={(name) => setMod({ ...mod, name })}
               />
             </FormControl>
@@ -125,7 +125,7 @@ export const ModModal: VFC = () => {
               <Input
                 maxWidth="52px"
                 maxLength={4}
-                value={toHex(mod.address, 4)}
+                value={toHex(mod.address)}
                 onChangeText={(text) => setValue(mod, text, true)}
               />
             </FormControl>

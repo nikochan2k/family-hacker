@@ -1,16 +1,16 @@
 import { Button, HStack, Text, VStack } from "native-base";
 import React, { Fragment, VFC } from "react";
 import { StyleSheet } from "react-native";
-import { useRecoilState } from "recoil";
-import { modificationsAtom } from "../../../stores/modifications";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  modificationAtom,
+  modificationsAtom,
+} from "../../../stores/modifications";
 import { Mod } from "./Mod";
 
 export const ModsPane: VFC = () => {
   const [mods, setMods] = useRecoilState(modificationsAtom);
-
-  if (mods.length === 0) {
-    return <Fragment />;
-  }
+  const setModification = useSetRecoilState(modificationAtom);
 
   return (
     <VStack>
@@ -18,6 +18,15 @@ export const ModsPane: VFC = () => {
         <Text size="container" bold>
           Modifications
         </Text>
+        <Button
+          marginLeft="10px"
+          variant="ghost"
+          size="container"
+          colorScheme="warning"
+          onPress={() => setModification({ name: "", address: 0, value: 0 })}
+        >
+          add
+        </Button>
         {0 < mods.length ? (
           <Button
             marginLeft="10px"
@@ -34,7 +43,7 @@ export const ModsPane: VFC = () => {
       </HStack>
       <VStack marginLeft="10px">
         {mods.map((mod) => (
-          <Mod mod={mod} />
+          <Mod key={mod.address} mod={mod} />
         ))}
       </VStack>
     </VStack>
