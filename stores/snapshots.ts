@@ -1,5 +1,23 @@
 import { atom } from "recoil";
-import { Condition } from "../model";
+
+export type ExprType =
+  | "*"
+  | "="
+  | "≠"
+  | ">"
+  | "≧"
+  | "<"
+  | "≦"
+  | "+"
+  | "-"
+  | "≠?"
+  | ">?"
+  | "<?";
+
+export interface Condition {
+  expr: ExprType;
+  value: number;
+}
 
 export interface Byte {
   address: number;

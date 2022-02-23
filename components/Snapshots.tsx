@@ -2,8 +2,7 @@ import { Button, HStack, Text, View, VStack } from "native-base";
 import React, { Fragment, useCallback, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilState } from "recoil";
-import { Condition } from "../model";
-import { snapshotsAtom } from "../stores/snapshots";
+import { Condition, snapshotsAtom } from "../stores/snapshots";
 import { toHex } from "../util";
 import { Memories } from "./Memories";
 
@@ -31,7 +30,7 @@ export const Snapshots: VFC = () => {
     <VStack>
       <HStack style={styles.title}>
         <Text color="dark.300" size="container" bold>
-          Inspection
+          Inspections
         </Text>
         {0 < snapshots.length ? (
           <Button
@@ -54,7 +53,7 @@ export const Snapshots: VFC = () => {
               {last === current ? (
                 <Button
                   size="container"
-                  minWidth="18px"
+                  minWidth="16px"
                   variant="ghost"
                   colorScheme="danger"
                   onPress={removeLast}
@@ -62,10 +61,10 @@ export const Snapshots: VFC = () => {
                   ×
                 </Button>
               ) : (
-                <View minWidth="18px" />
+                <View minWidth="16px" />
               )}
-              <Text>{index + 1}:</Text>
-              <Text marginLeft="5px" color="dark.400">
+              <Text>{index + 1}</Text>
+              <Text marginLeft="4px" color="dark.500" italic>
                 {condToStr(current.condition)}
               </Text>
             </HStack>

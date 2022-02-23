@@ -1,92 +1,31 @@
-import { Box, HStack, Input, Link, Text } from "native-base";
-import React, { useCallback, useRef, useState, VFC } from "react";
-import { Platform, StyleSheet } from "react-native";
-import { useRecoilCallback } from "recoil";
-import { nesKeyAtom } from "../stores/nes";
+import { Box, HStack, Link, Text } from "native-base";
+import React, { VFC } from "react";
+import { useSetRecoilState } from "recoil";
+import { modificationAtom } from "../stores/modifications";
 import { Byte } from "../stores/snapshots";
 import { toHex } from "../util";
-import { nesMap } from "./EmulatorCommon";
 
-export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
-  const [byte, setByte] = useState(data.byte);
-  const [editing, setEditing] = useState(false);
-  const submited = useRef(false);
-
-  const setText = useCallback(
-    async (text: string) => {
-      if (!text) {
-        setByte({ ...byte, value: 0 });
-        return;
-      }
-      if (/[^0-9A-Fa-f]/.test(text) || 2 < text.length) {
-        return;
-      }
-      let value = parseInt(text, 16);
-      if (isNaN(value)) {
-        return;
-      }
-      if (value < 0) {
-        value = 0;
-      }
-      if (256 <= value) {
-        value = 255;
-      }
-      setByte({ ...byte, value });
-    },
-    [byte]
-  );
-
-  const onSubmit = useRecoilCallback(
-    ({ snapshot }) =>
-      async () => {
-        if (byte.value === data.byte.value) {
-          return;
-        }
-
-        const nesKey = await snapshot.getPromise(nesKeyAtom);
-        const nes = nesMap[nesKey];
-        nes.cpu.mem[byte.address] = byte.value;
-
-        submited.current = true;
-        setEditing(false);
-      },
-    [byte]
-  );
-
-  const onBlur = useCallback(async () => {
-    if (submited.current) {
-      submited.current = false;
-    } else {
-      setByte(data.byte);
-    }
-    setEditing(false);
-  }, [byte]);
-
-  const isLast = data.isLast;
+export const Memory: VFC<{ byte: Byte; isLast: boolean }> = ({
+  byte,
+  isLast,
+}) => {
+  const setMod = useSetRecoilState(modificationAtom);
 
   return (
-    <HStack style={styles.container}>
-      <Box style={styles.box} width={"40px"}>
+    <HStack>
+      <Box width={"40px"}>
         <Text size="container" color="dark.300">
           {toHex(byte.address, 4)}
         </Text>
       </Box>
-      <Box style={styles.box} width={"20px"}>
-        {editing ? (
-          <Input
-            margin={0}
-            padding={0}
-            size="container"
-            value={toHex(byte.value)}
-            onChangeText={setText}
-            onSubmitEditing={onSubmit}
-            onBlur={onBlur}
-          />
-        ) : isLast ? (
+      <Box width={"20px"}>
+        {isLast ? (
           <Link
-            onPress={() => setEditing(true)}
+            onPress={() =>
+              setMod({ name: "", address: byte.address, value: byte.value })
+            }
             _text={{
-              color: data.byte.value !== byte.value ? "red.500" : "dark.400",
+              color: "dark.400",
             }}
           >
             {toHex(byte.value, 2)}
@@ -98,24 +37,3 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
     </HStack>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-  box: {
-    marginHorizontal: 2,
-  },
-  text: {
-    textAlign: "center",
-    fontFamily: Platform.OS === "android" ? "monospace" : "Courier",
-  },
-  underline: {
-    textAlign: "center",
-    fontFamily: Platform.OS === "android" ? "monospace" : "Courier",
-    textDecorationLine: "underline",
-  },
-  input: {
-    textAlign: "center",
-    padding: 0,
-    fontFamily: Platform.OS === "android" ? "monospace" : "Courier",
-  },
-});

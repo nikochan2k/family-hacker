@@ -16,9 +16,9 @@ export const Memories: VFC<{ current: Byte[]; last: Byte[] }> = ({
     );
   }
 
-  let more = 16 < bytes.length;
+  let more = 10 < bytes.length;
   if (more) {
-    bytes = bytes.slice(0, 16);
+    bytes = bytes.slice(0, 10);
   }
 
   return (
