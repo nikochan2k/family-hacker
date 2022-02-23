@@ -76,7 +76,7 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
             onSubmitEditing={onSubmit}
             onBlur={onBlur}
           />
-        ) : (
+        ) : isLast ? (
           <Link
             onPress={() => setEditing(true)}
             _text={{
@@ -85,6 +85,10 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
           >
             {byte.value.toString(16).toUpperCase().padStart(2, "0")}
           </Link>
+        ) : (
+          <Text color="dark.300">
+            {byte.value.toString(16).toUpperCase().padStart(2, "0")}
+          </Text>
         )}
       </Box>
     </HStack>
