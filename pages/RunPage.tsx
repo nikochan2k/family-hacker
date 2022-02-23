@@ -1,4 +1,4 @@
-import { HStack, VStack } from "native-base";
+import { Heading, HStack, VStack } from "native-base";
 import React, { Fragment, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilValue } from "recoil";
@@ -13,24 +13,30 @@ export const RunPage: VFC = () => {
   const hacking = useRecoilValue(hackingAtom);
 
   return (
-    <HStack style={styles.container}>
-      <ModModal />
-      <Console />
-      {hacking ? (
-        <VStack marginLeft={"10px"}>
-          <Hacking />
-          <InspectionsPane />
-          <ModsPane />
-        </VStack>
-      ) : (
-        <Fragment />
-      )}
-    </HStack>
+    <VStack style={styles.container}>
+      <Heading color="rose.900">Family Hacker</Heading>
+      <HStack style={styles.main}>
+        <ModModal />
+        <Console />
+        {hacking ? (
+          <VStack marginLeft={"10px"}>
+            <Hacking />
+            <InspectionsPane />
+            <ModsPane />
+          </VStack>
+        ) : (
+          <Fragment />
+        )}
+      </HStack>
+    </VStack>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+  },
+  main: {
     flex: 1,
     justifyContent: "center",
     flexWrap: "wrap",

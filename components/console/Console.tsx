@@ -139,15 +139,17 @@ export const Console: VFC = () => {
         </HStack>
         {cartridge ? (
           <HStack>
-            <Text color={"danger.400"}>Hack</Text>
+            <Text color={"rose.900"} bold>
+              Hack
+            </Text>
             <Switch
               value={hacking}
               onValueChange={(value) => setHacking(value)}
               marginLeft={"5px"}
-              offTrackColor="danger.100"
-              onTrackColor="danger.200"
-              onThumbColor="danger.500"
-              offThumbColor="danger.50"
+              offTrackColor="rose.100"
+              onTrackColor="rose.200"
+              onThumbColor="rose.900"
+              offThumbColor="rose.50"
             />
           </HStack>
         ) : (
