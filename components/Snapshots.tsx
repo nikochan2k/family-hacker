@@ -1,9 +1,18 @@
-import { Button, HStack, Text, VStack } from "native-base";
+import { Button, HStack, Text, View, VStack } from "native-base";
 import React, { Fragment, useCallback, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilState } from "recoil";
+import { Condition } from "../model";
 import { snapshotsAtom } from "../stores/snapshots";
+import { toHex } from "../util";
 import { Memories } from "./Memories";
+
+function condToStr(cond: Condition) {
+  if (["*", "≠?", ">?", "<?"].indexOf(cond.expr) >= 0) {
+    return cond.expr;
+  }
+  return cond.expr + toHex(cond.value, 2);
+}
 
 export const Snapshots: VFC = () => {
   const [snapshots, setSnapshots] = useRecoilState(snapshotsAtom);
@@ -42,11 +51,10 @@ export const Snapshots: VFC = () => {
         {snapshots.map((current, index) => (
           <VStack key={index}>
             <HStack style={styles.header}>
-              <Text>{index}</Text>
               {last === current ? (
                 <Button
                   size="container"
-                  marginLeft="5px"
+                  minWidth="18px"
                   variant="ghost"
                   colorScheme="danger"
                   onPress={removeLast}
@@ -54,8 +62,12 @@ export const Snapshots: VFC = () => {
                   ×
                 </Button>
               ) : (
-                <Fragment />
+                <View minWidth="18px" />
               )}
+              <Text>{index + 1}:</Text>
+              <Text marginLeft="5px" color="dark.400">
+                {condToStr(current.condition)}
+              </Text>
             </HStack>
             <Memories current={current.bytes} last={last.bytes} />
           </VStack>
@@ -72,8 +84,8 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 2,
+    justifyContent: "flex-start",
+    marginRight: 2,
     borderBottomWidth: 1,
     borderBottomColor: "#666",
   },

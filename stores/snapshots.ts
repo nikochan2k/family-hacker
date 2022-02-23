@@ -9,7 +9,7 @@ export interface Byte {
 export interface Snapshot {
   bytes: Byte[];
   ticks: number;
-  condition: string;
+  condition: Condition;
 }
 
 export const snapshotsAtom = atom<Snapshot[]>({
@@ -65,7 +65,7 @@ export const addSnapshot = (
   }
   const snapshot: Snapshot = {
     bytes: [],
-    condition: cond.expr,
+    condition: cond,
     ticks: Date.now(),
   };
   if (snapshots.length === 0) {

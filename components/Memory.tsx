@@ -66,12 +66,12 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
 
   return (
     <HStack style={styles.container}>
-      <Box style={styles.box} width={"44px"}>
+      <Box style={styles.box} width={"40px"}>
         <Text size="container" color="dark.300">
-          {toHex(byte.value, 4)}
+          {toHex(byte.address, 4)}
         </Text>
       </Box>
-      <Box style={styles.box} width={"22px"}>
+      <Box style={styles.box} width={"20px"}>
         {editing ? (
           <Input
             margin={0}
@@ -86,13 +86,13 @@ export const Memory: VFC<{ byte: Byte; isLast: boolean }> = (data) => {
           <Link
             onPress={() => setEditing(true)}
             _text={{
-              color: data.byte.value !== byte.value ? "red.500" : "dark.300",
+              color: data.byte.value !== byte.value ? "red.500" : "dark.400",
             }}
           >
             {toHex(byte.value, 2)}
           </Link>
         ) : (
-          <Text color="dark.300">{toHex(byte.value, 2)}</Text>
+          <Text color="dark.400">{toHex(byte.value, 2)}</Text>
         )}
       </Box>
     </HStack>
