@@ -1,9 +1,9 @@
 import { Box, HStack, Link, Text } from "native-base";
 import React, { VFC } from "react";
 import { useSetRecoilState } from "recoil";
-import { modificationAtom } from "../stores/modifications";
-import { Byte } from "../stores/snapshots";
-import { toHex } from "../util";
+import { modificationAtom } from "../../../stores/modifications";
+import { Byte } from "../../../stores/snapshots";
+import { toHex } from "../../../util";
 
 export const Memory: VFC<{ byte: Byte; isLast: boolean }> = ({
   byte,

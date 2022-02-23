@@ -1,6 +1,6 @@
 import { Text } from "native-base";
 import React, { Fragment, VFC } from "react";
-import { Byte } from "../stores/snapshots";
+import { Byte } from "../../../stores/snapshots";
 import { Memory } from "./Memory";
 
 export const Memories: VFC<{ current: Byte[]; last: Byte[] }> = ({

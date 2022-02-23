@@ -2,8 +2,8 @@ import { Button, HStack, Text, View, VStack } from "native-base";
 import React, { Fragment, useCallback, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilState } from "recoil";
-import { Condition, snapshotsAtom } from "../stores/snapshots";
-import { toHex } from "../util";
+import { Condition, snapshotsAtom } from "../../../stores/snapshots";
+import { toHex } from "../../../util";
 import { Memories } from "./Memories";
 
 function condToStr(cond: Condition) {

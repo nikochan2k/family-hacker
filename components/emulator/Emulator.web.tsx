@@ -1,8 +1,8 @@
 // @ts-ignore
 import { NES } from "jsnes";
 import React, { PureComponent } from "react";
-import FrameTimer from "../features/FrameTimer";
-import KeyboardController from "../features/KeyboardController";
+import FrameTimer from "../../features/FrameTimer";
+import KeyboardController from "../../features/KeyboardController";
 import { EmulatorProps, nesMap } from "./EmulatorCommon";
 import { Screen } from "./Screen";
 

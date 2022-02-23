@@ -1,8 +1,8 @@
 import { Box, HStack, Link, Text } from "native-base";
 import React, { Fragment, VFC } from "react";
 import { useSetRecoilState } from "recoil";
-import { Modification, modificationAtom } from "../stores/modifications";
-import { toHex } from "../util";
+import { Modification, modificationAtom } from "../../../stores/modifications";
+import { toHex } from "../../../util";
 
 export const Mod: VFC<{ mod: Modification }> = ({ mod }) => {
   const setModification = useSetRecoilState(modificationAtom);

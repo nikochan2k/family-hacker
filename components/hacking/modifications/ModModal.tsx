@@ -13,10 +13,10 @@ import {
   Modification,
   modificationAtom,
   modificationsAtom,
-} from "../stores/modifications";
-import { nesKeyAtom } from "../stores/nes";
-import { deepCopy, toHex } from "../util";
-import { nesMap } from "./EmulatorCommon";
+} from "../../../stores/modifications";
+import { nesKeyAtom } from "../../../stores/nes";
+import { deepCopy, toHex } from "../../../util";
+import { nesMap } from "../../emulator/EmulatorCommon";
 
 export const ModModal: VFC = () => {
   const modification = useRecoilValue(modificationAtom);

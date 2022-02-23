@@ -2,18 +2,18 @@ import { Button, HStack, Input, Select } from "native-base";
 import React, { Fragment, useCallback, useState, VFC } from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilCallback } from "recoil";
-import { nesKeyAtom } from "../stores/nes";
+import { nesKeyAtom } from "../../../stores/nes";
 import {
   addSnapshot,
   Condition,
   ExprType,
   snapshotsAtom,
-} from "../stores/snapshots";
-import { nesMap } from "./EmulatorCommon";
+} from "../../../stores/snapshots";
+import { nesMap } from "../../emulator/EmulatorCommon";
 
-export const FirstCondition: VFC = () => {
+export const FollowingCondition: VFC = () => {
   const [condition, setCondition] = useState<Condition>({
-    expr: "*",
+    expr: "≠?",
     value: 0,
   });
 
@@ -30,7 +30,7 @@ export const FirstCondition: VFC = () => {
   );
 
   const setText = useCallback(
-    (text: string) => {
+    (text) => {
       if (!text) {
         setCondition({ ...condition, value: 0 });
         return;
@@ -50,7 +50,7 @@ export const FirstCondition: VFC = () => {
     [condition]
   );
 
-  const hasText = condition.expr !== "*";
+  const hasText = ["≠?", ">?", "<?"].indexOf(condition.expr) < 0;
 
   return (
     <HStack style={styles.container}>
@@ -61,13 +61,17 @@ export const FirstCondition: VFC = () => {
           setCondition({ ...condition, expr: value as ExprType })
         }
       >
-        <Select.Item label="* (all)" value="*" />
         <Select.Item label="= (equal)" value="=" />
         <Select.Item label="≠ (not equal)" value="≠" />
         <Select.Item label="> (greater)" value=">" />
         <Select.Item label="≧ (greater or equal)" value="≧" />
         <Select.Item label="< (less)" value="<" />
         <Select.Item label="≦ (less or equal)" value="≦" />
+        <Select.Item label="+ (plus from last value)" value="+" />
+        <Select.Item label="- (minus from last value)" value="-" />
+        <Select.Item label="≠? (not equal to last value)" value="≠?" />
+        <Select.Item label=">? (greater than last value)" value=">?" />
+        <Select.Item label="<? (less than last value)" value="<?" />
       </Select>
       {hasText ? (
         <Input width={50} value={condition.value + ""} onChangeText={setText} />
