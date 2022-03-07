@@ -57,6 +57,8 @@ export const FirstCondition: VFC = () => {
   return (
     <HStack style={styles.container}>
       <Select
+        accessibilityLabel="Choose condition"
+        placeholder="Choose condition"
         minWidth={hasText ? 250 : 300}
         selectedValue={condition.expr}
         onValueChange={(value) =>
